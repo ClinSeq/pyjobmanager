@@ -1,15 +1,37 @@
 import logging
 import subprocess
-
+import abc
+import json
 import sys
-
 import datetime
 from click import progressbar
 
-import runner
+#import runner
 from pyjobmanager.pypedreamstatus import PypedreamStatus
 
 __author__ = 'vinaykaikala'
+
+
+class Runner(object):
+    """ An abstract class that can run scripts on the cli or submit to a queue.
+        Concrete implementations of Runner have to implement the run() method which runs the jobs.
+        The pipeline is responsible for generating a list of ordered jobs to run.
+    """
+
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self):
+        pass
+
+    @abc.abstractmethod
+    def run(self, pipeline):
+        pass
+
+    @abc.abstractmethod
+    def get_job_status(self, jobid):
+        pass
+
+
 
 
 def get_job_name(job):
@@ -19,7 +41,7 @@ def get_job_name(job):
         return "Done!"
 
 
-class Shellrunner(runner.Runner):
+class Shellrunner(Runner):
     def __init__(self):
         self.pipeline = None
 

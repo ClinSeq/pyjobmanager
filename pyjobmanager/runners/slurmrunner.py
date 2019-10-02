@@ -1,8 +1,11 @@
 import re
 import subprocess
 import time
+import abc
+import json
 
-import runner
+
+#import  pyjobmanager.runners.runner as runner 
 from pyjobmanager.pypedreamstatus import PypedreamStatus
 
 import logging
@@ -17,8 +20,29 @@ exitcode_cancelled = 100001
 exitcode_failed = 100002
 exitcode_completed = 0
 
+class Runner(object):
+    """ An abstract class that can run scripts on the cli or submit to a queue.
+        Concrete implementations of Runner have to implement the run() method which runs the jobs.
+        The pipeline is responsible for generating a list of ordered jobs to run.
+    """
 
-class Slurmrunner(runner.Runner):
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self):
+        pass
+
+    @abc.abstractmethod
+    def run(self, pipeline):
+        pass
+
+    @abc.abstractmethod
+    def get_job_status(self, jobid):
+        pass
+
+
+
+
+class Slurmrunner(Runner):
     def __init__(self, interval=30):
         """
         Run jobs on a slurm cluster.

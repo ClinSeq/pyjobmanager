@@ -59,11 +59,11 @@ class PypedreamPipeline(Process):
         inputs = []
         outputs = []
         for varname in job.__dict__:
-            if varname.startswith(pypedream.constants.INPUT):
+            if varname.startswith(pyjobmanager.constants.INPUT):
                 inputs.append(varname)
 
         for varname in job.__dict__:
-            if varname.startswith(pypedream.constants.OUTPUT):
+            if varname.startswith(pyjobmanager.constants.OUTPUT):
                 outputs.append(varname)
 
         logger.debug("  inputs: " + str(inputs))
@@ -108,8 +108,8 @@ class PypedreamPipeline(Process):
         files = []
         for tool in self.graph.nodes():
             for varname in tool.__dict__:
-                if varname.startswith(pypedream.constants.INPUT) or \
-                        varname.startswith(pypedream.constants.OUTPUT):  # input and outputs are files
+                if varname.startswith(pyjobmanager.constants.INPUT) or \
+                        varname.startswith(pyjobmanager.constants.OUTPUT):  # input and outputs are files
                     obj = tool.__dict__[varname]  # can be a list or a string
                     if obj.__class__.__name__ == "str":
                         files.append(obj)
@@ -126,7 +126,7 @@ class PypedreamPipeline(Process):
         tools = []
         for tool in self.graph.nodes():
             for varname in tool.__dict__:
-                if varname.startswith(pypedream.constants.INPUT):
+                if varname.startswith(pyjobmanager.constants.INPUT):
                     obj = tool.__dict__[varname]  # can be a list or a string
                     if obj.__class__.__name__ == "str" and obj == filename:
                         tools.append(tool)
@@ -168,7 +168,7 @@ class PypedreamPipeline(Process):
         tools = []
         for tool in self.graph.nodes():
             for varname in tool.__dict__:
-                if varname.startswith(pypedream.constants.OUTPUT):
+                if varname.startswith(pyjobmanager.constants.OUTPUT):
                     obj = tool.__dict__[varname]  # can be a list or a string
                     if obj == filename:
                         tools.append(tool)
@@ -284,10 +284,10 @@ class PypedreamPipeline(Process):
 
                     for varname in j.__dict__:
                         obj = j.__dict__[varname]  # can be a list or a string
-                        if varname.startswith(pypedream.constants.INPUT):
+                        if varname.startswith(pyjobmanager.constants.INPUT):
                             inputs[varname] = obj
 
-                        if varname.startswith(pypedream.constants.OUTPUT):
+                        if varname.startswith(pyjobmanager.constants.OUTPUT):
                             outputs[varname] = obj
 
                     jobs.append({'jobname': j.jobname,
